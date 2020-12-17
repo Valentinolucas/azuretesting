@@ -35,8 +35,7 @@ stages:
         timeoutInMinutes: 20
         pool:
           vmImage: 'ubuntu-20.04'
-        variables:
-          - group: apigee-${{ parameters.org_type }}
+
         steps:
           - checkout: self
 
