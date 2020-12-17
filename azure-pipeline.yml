@@ -1,0 +1,129 @@
+name: "$(SourceBranchName)+$(BuildID)"
+
+trigger: none #["master"]
+pr: none
+
+parameters:
+- name: org_type
+  displayName: org_type for APIgee (prod/ptl=nonprod)
+  type: string
+  values:
+  - nonprod
+  - prod
+
+stages:
+  - stage: prod_aproval
+    condition: eq('${{ parameters.org_type }}', 'prod')
+    jobs:
+      - deployment: approval
+        pool:
+          vmImage: "Ubuntu-16.04"
+        environment: "manual-approval"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - bash: |
+                    echo 'Dummy step'
+                  displayName: "Approve infraestructure build"
+
+  - stage: build
+    condition: or(succeeded(), eq('${{ parameters.org_type }}', 'nonprod'))
+    jobs:
+      - job: build
+        displayName: Setup APIgee
+        timeoutInMinutes: 20
+        pool:
+          vmImage: 'ubuntu-20.04'
+        variables:
+          - group: apigee-${{ parameters.org_type }}
+        steps:
+          - checkout: self
+
+          - bash: echo "##vso[task.setvariable variable=BRANCH_NAME]`echo $(System.PullRequest.SourceBranch) | sed -r 's/[/|\\@":<>?*]+/-/g'`"
+            displayName: Set and replace invalid characters in branch name
+  
+          - task: DownloadSecureFile@1
+            name: aws_config 
+            inputs:
+              ${{ if eq(parameters.org_type, 'nonprod') }}:
+                secureFile: 'ptl_aws_config'  
+
+          - bash: echo $(AWS_ACCOUNT_TYPE)
+            displayName: Check env variable 1
+          
+          - bash: echo '$(AWS_ACCOUNT_TYPE)_aws_config' 
+            displayName: Check env variable string
+
+          # - bash: echo $AWS_ACCOUNT_TYPE
+          #   displayName: Check env variable 2
+
+          # - bash: echo '##vso[task.setvariable variable=aws_account_type]$(AWS_ACCOUNT_TYPE)'
+          #   displayName: set aws_account_type
+
+          # - bash: echo $(aws_account_type)
+          #   displayName: Check aws_account_type
+
+          # - bash: echo '$(aws_account_type)_aws_config' 
+          #   displayName: Check srtring 2
+          # - bash: |
+          #     mkdir -p ~/.aws
+          #     mv $(aws_config.secureFilePath) ~/.aws/config
+          #     chmod 400 ~/.aws/config
+          #   displayName: "setup aws config"
+
+          # - bash: |
+          #     pip install --upgrade pip setuptools
+          #     curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+          #     sudo apt-get update
+          #     sudo apt-get install oathtool gnupg2 python3-venv jq -y
+          #     source $HOME/.poetry/env
+          #     poetry config virtualenvs.in-project true
+          #     # make python 3 default
+          #     sudo unlink /usr/bin/python
+          #     sudo ln -s /usr/bin/python3 /usr/bin/python
+          #   displayName: "install setup dependencies"
+
+          # - bash: |
+          #     export MFA_CODE=`oathtool --totp -b "$(APIGEE_OTP_KEY)"`
+          #     # basic auth value here is an apigee public value .. https://docs.apigee.com/api-platform/system-administration/management-api-tokens  (not secret)
+          #     curl -X POST https://login.apigee.com/oauth/token \
+          #       -H "Content-Type: application/x-www-form-urlencoded" \
+          #       -H "Accept: application/json;charset=utf-8" \
+          #       -H "Authorization: Basic ZWRnZWNsaTplZGdlY2xpc2VjcmV0" \
+          #       -d "username=$(APIGEE_USERNAME)&password=$(APIGEE_PASSWORD)&mfa_token=${MFA_CODE}&grant_type=password" | jq .access_token > .token
+          #     # Set token into variable
+          #     echo "##vso[task.setvariable variable=secret.AccessToken;issecret=true]`cat .token`"
+          #   displayName: "get access token"
+
+          # - task: Cache@2
+          #   displayName: "poetry cache"
+          #   inputs:
+          #     key: apm-mananagement-infra-poetry | $(Agent.OS) |  poetry.lock
+          #     path: ".venv"
+
+          # - bash: |
+          #     source $HOME/.poetry/env
+          #     poetry config virtualenvs.in-project true
+          #     make install
+          #   displayName: "install project dependencies"
+            
+          # - bash: |
+          #     source $HOME/.poetry/env
+          #     account=ptl API_ORG=nhsd-${{ parameters.org_type }} API_ACCESS_TOKEN=$(secret.AccessToken) make -C ansible apigee-key-value-maps
+          #   displayName: "setup apigee key value maps"
+
+          # - bash: |
+          #     source $HOME/.poetry/env
+          #     account=ptl API_ACCESS_TOKEN=$(secret.AccessToken) API_ORG=nhsd-${{ parameters.org_type }} make -C ansible apigee-tls-keystores
+          #   displayName: "manage apigee tls keystores"
+
+          # - bash: |
+          #     source $HOME/.poetry/env
+          #     account=ptl API_ORG=nhsd-${{ parameters.org_type }} API_ACCESS_TOKEN=$(secret.AccessToken) make -C ansible apigee-target-servers
+          #   displayName: "setup apigee target servers"
+
+          # - bash: |
+          #     source $HOME/.poetry/env
+          #     account=ptl API_ORG=nhsd-${{ parameters.org_type }} API_ACCESS_TOKEN=$(secret.AccessToken) make -C ansible apigee-shared-flows
+          #   displayName: "manage apigee shared flows"
