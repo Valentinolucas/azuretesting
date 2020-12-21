@@ -41,5 +41,6 @@ stages:
         pool:
           vmImage: 'ubuntu-20.04'
         steps:
-          - bash: echo 'Testing'
+        - ${{ each value in parameters.environments }}:
+          - bash: echo ${{ value }}
             displayName: Testing stuff
