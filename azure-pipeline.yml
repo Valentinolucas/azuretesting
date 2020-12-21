@@ -12,6 +12,7 @@ parameters:
   - ptl_nhsd_prod
   - prod_nhsd_prod
 
+stages:
   - stage: build
     jobs:
       - job: build
