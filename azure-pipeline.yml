@@ -8,7 +8,7 @@ parameters:
   displayName: org_type for APIgee (prod/ptl=nonprod)
   type: string
   values:
-  - ptl_nonprod
+  - 'internal-qa-sandbox,internal-qa,internal-dev,internal-dev-sandbox'
   - ptl_prod
   - prod
 
