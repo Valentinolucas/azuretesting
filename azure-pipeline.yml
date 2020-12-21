@@ -4,13 +4,13 @@ trigger: none #["master"]
 pr: none
 
 parameters:
-- name: aws_org
-  displayName: aws_org
+- name: org_type
+  displayName: org_type for APIgee (prod/ptl=nonprod)
   type: string
   values:
-    - ptl_nonprod
-    - ptl_prod
-    - prod
+  - ptl_nonprod
+  - ptl_prod
+  - prod
 
 # - name: ptl_nhsd_nonprod_envs
 #   type: object
@@ -42,7 +42,7 @@ stages:
         pool:
           vmImage: 'ubuntu-20.04'
         steps:
-          bash: echo '${{ parameters.aws_org }}'
+          bash: echo '${{ parameters.org_type }}'
 
         # - ${{ each env in parameters.$parameters.aws_org_envs }}:
         #   - bash: echo ${{ env }}
