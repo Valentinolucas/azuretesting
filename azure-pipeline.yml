@@ -6,8 +6,8 @@ pr: none
 parameters:
 - name: org_type
   displayName: org_type for APIgee (prod/ptl=nonprod)
-  type: string
-  values:
+  type: object
+  default:
     ptl_nonprod:
       - internal-dev
     ptl_prod:
