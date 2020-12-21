@@ -43,7 +43,7 @@ stages:
           vmImage: 'ubuntu-20.04'
         steps:
 
-        - ${{ each env in parameters.${{ parameters.aws_org }}_envs }}:
+        - ${{ each env in parameters.$parameters.aws_org_envs }}:
           - bash: echo ${{ env }}
             displayName: ${{ env }}
           # - ${{ each env in apigee_org}}:
