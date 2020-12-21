@@ -10,27 +10,9 @@ parameters:
   values:
     - ptl_nhsd_nonprod
     - ptl_nhsd_prod
-    - prod_nhsd_prod
+    - prod
 
-# - name: environments
-#   displayName: environments
-#   type: object
-#   default:
-#     ptl:
-#       nhsd-nonprod:
-#         - internal-dev
-#         - internal-dev-sandbox
-#         - internal-qa
-#         - internal-qa-sanbox
-#         - ref
-#       nhsd-prod:
-#         - sandbox
-#         - int
-#         - dev
-#     prod:
-#       nhsd-prod: 
-#         - prod
-- name: ptl_env
+- name: ptl_nhsd_nonprod_envs
   type: object
   default:
     - internal-dev
@@ -38,6 +20,18 @@ parameters:
     - internal-qa
     - internal-qa-sanbox
     - ref
+
+- name: ptl_nhsd_prod_envs
+  type: object
+  default:
+    - sandbox
+    - int
+    - dev
+
+- name: prod_envs
+  type: object
+  default:
+    - prod
 
 stages:
   - stage: build
@@ -48,7 +42,8 @@ stages:
         pool:
           vmImage: 'ubuntu-20.04'
         steps:
-        - ${{ each env in parameters.ptl_env }}:
+
+        - ${{ each env in parameters.${{parameters.aws_org}}_envs }}:
           - bash: echo ${{ env }}
             displayName: ${{ env }}
           # - ${{ each env in apigee_org}}:
