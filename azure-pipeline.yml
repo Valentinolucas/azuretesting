@@ -42,7 +42,9 @@ stages:
         pool:
           vmImage: 'ubuntu-20.04'
         steps:
+        - ${{ if eq(parameters.org_type, 'ptl_nonprod') }}:
           - bash: echo '${{ parameters.org_type }}'
+          - bash: echo sucedio
 
         # - ${{ each env in parameters.$parameters.aws_org_envs }}:
         #   - bash: echo ${{ env }}
