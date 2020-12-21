@@ -43,5 +43,5 @@ stages:
         steps:
         - ${{ each apigee_org in parameters.environments.ptl }}:
           - ${{ each value in apigee_org}}:
-            - bash: echo ${{ value }}
+            - bash: echo ${{ value.value }}
               displayName: Testing stuff
