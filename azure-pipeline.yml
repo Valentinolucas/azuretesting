@@ -9,12 +9,12 @@ parameters:
   type: object
   values:
     ptl:
-      nhsd-nonprod:
+      - nhsd-nonprod:
         - internal-dev
-      nhsd-prod:
+      - nhsd-prod:
         - int
     prod: 
-      nhsd-prod:
+      - nhsd-prod:
         - prod
 
 
