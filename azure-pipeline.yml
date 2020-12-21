@@ -41,6 +41,7 @@ stages:
         pool:
           vmImage: 'ubuntu-20.04'
         steps:
-        - ${{ each org in parameters.environments.ptl }}:
-          - bash: echo ${{ org.key }}
+        - ${{ each apigee_org in parameters.environments.ptl }}:
+          - ${{ each env in apigee_org}}:
+          - bash: echo ${{ env}}
             displayName: Testing stuff
