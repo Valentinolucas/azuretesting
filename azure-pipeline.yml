@@ -19,8 +19,14 @@ parameters:
     ptl:
       nhsd-nonprod:
         - internal-dev
+        - internal-dev-sandbox
+        - internal-qa
+        - internal-qa-sanbox
+        - ref
       nhsd-prod:
+        - sandbox
         - int
+        - dev
     prod:
       nhsd-prod: 
         - prod
