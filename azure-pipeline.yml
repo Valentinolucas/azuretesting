@@ -43,7 +43,7 @@ stages:
           vmImage: 'ubuntu-20.04'
         steps:
         - bash: echo something
-        - ${{ if eq(parameters.org_type, 'ptl_nonprod') }}:
+        - ${{ if in(parameters.org_type, 'internal-dev') }}:
           - bash: echo '${{ parameters.org_type }}'
           - bash: echo sucedio
 
