@@ -8,6 +8,17 @@ parameters:
   displayName: org_type for APIgee (prod/ptl=nonprod)
   type: string
   values:
-  - nonprod
-  - prod
+  - ptl_nhsd_nonprod
+  - ptl_nhsd_prod
+  - prod_nhsd_prod
 
+  - stage: build
+    jobs:
+      - job: build
+        displayName: Testing stuff
+        timeoutInMinutes: 20
+        pool:
+          vmImage: 'ubuntu-20.04'
+        steps:
+          - bash: echo 'Testing'
+            displayName: Testing stuff
