@@ -42,6 +42,6 @@ stages:
           vmImage: 'ubuntu-20.04'
         steps:
         - ${{ each apigee_org in parameters.environments.ptl }}:
-          - ${{ each env in apigee_org}}:
-          - bash: echo ${{ env}}
-            displayName: Testing stuff
+          - ${{ each value in apigee_org}}:
+            - bash: echo ${{ value }}
+              displayName: Testing stuff
