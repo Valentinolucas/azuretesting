@@ -8,12 +8,14 @@ parameters:
   displayName: org_type for APIgee (prod/ptl=nonprod)
   type: object
   default:
-    ptl_nonprod:
-      - internal-dev
-    ptl_prod:
-      - int
-    prod: 
-      - prod
+    ptl:
+      nhsd-nonprod:
+        - internal-dev
+      nhsd-prod:
+        - int
+    prod:
+      nhsd-prod: 
+        - prod
 
 
 stages:
