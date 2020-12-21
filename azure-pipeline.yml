@@ -7,11 +7,11 @@ parameters:
 - name: aws_org
   displayName: aws_org
   type: string
-  value:
+  values:
     - ptl_nhsd_nonprod
     - ptl_nhsd_prod
     - prod_nhsd_prod
-    
+
 - name: environments
   displayName: environments
   type: object
