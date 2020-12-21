@@ -42,5 +42,5 @@ stages:
           vmImage: 'ubuntu-20.04'
         steps:
         - ${{ each value in parameters.environments.ptl }}:
-          - bash: echo ${{ value }}
+          - bash: echo ${{ value.key }}
             displayName: Testing stuff
