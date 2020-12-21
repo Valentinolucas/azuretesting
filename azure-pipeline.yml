@@ -42,7 +42,7 @@ stages:
         pool:
           vmImage: 'ubuntu-20.04'
         steps:
-          bash: echo '${{ parameters.org_type }}'
+          bash: echo '$parameters.org_type'
 
         # - ${{ each env in parameters.$parameters.aws_org_envs }}:
         #   - bash: echo ${{ env }}
